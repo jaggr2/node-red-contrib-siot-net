@@ -1,0 +1,257 @@
+<script type="text/javascript">
+    RED.nodes.registerType('siot-center',{
+        category: 'config',
+        defaults: {
+            licenseID: {value:"",required:true}
+        },
+        label: function() {
+            return this.licenseID;
+        }
+    });
+</script>
+
+<script type="text/x-red" data-template-name="siot-center">
+    <div class="form-row">
+        <label for="node-config-input-licenseID"><i class="icon-bookmark"></i> License ID</label>
+        <input type="text" id="node-config-input-licenseID">
+    </div>
+</script>
+
+
+<!-- ------------------------------- SIOT NET ---------------------------------- -->
+<script type="text/javascript">
+    function generateGUID() {
+        function s4() {
+            return Math.floor((1 + Math.random()) * 0x10000)
+                    .toString(16)
+                    .substring(1);
+        }
+        return s4() + s4() + '-' + s4() + '-' + s4() + '-' +
+                s4() + '-' + s4() + s4() + s4();
+    }
+
+    RED.nodes.registerType('siot-net in',{
+        category: 'input',
+        color: '#C0DEED',
+        defaults: {
+            name: {value:"", required: true},
+            description: {value:""},
+            siotCenter: {value: "", type:"siot-center", required: true},
+            uuid: {value: generateGUID(), required: true},
+            valueType: {value: "", required: true}
+        },
+        onadd: function() {
+
+            // every time we add a new we set a new default uuid
+            var nodetype = RED.nodes.getType('siot-net in');
+
+            nodetype.defaults.uuid.value = generateGUID();
+            //console.log(new Date(), nodetype);
+        },
+        inputs:0,
+        outputs:1,
+        icon: "bridge.png",
+        label: function() {
+            return this.name||"siot Actor";
+        }
+    });
+</script>
+
+<script type="text/x-red" data-template-name="siot-net in">
+
+    <div class="form-row">
+        <label for="node-input-siotCenter"><i class="icon-tag"></i> siot Center</label>
+        <input type="text" id="node-input-siotCenter" placeholder="Name">
+    </div>
+    <div class="form-row">
+        <label for="node-input-valueType"><i class="icon-tag"></i> Value type</label>
+        <select id="node-input-valueType">
+
+            <optgroup label="Simple types">
+            <option value="int">Integer</option>
+            <option value="float">Float</option>
+            <option value="string">String</option>
+            <option value="boolean">Boolean</option>
+            <option value="binary">Binary</option>
+
+            <optgroup label="Complex types">
+            <option value="gps">GPS</option>
+            <option value="json">JSON</option>
+
+        </select>
+    </div>
+    <div class="form-row">
+        <label for="node-input-uuid"><i class="icon-tag"></i> UUID</label>
+        <input type="text" id="node-input-uuid" placeholder="Name">
+    </div>
+    <div class="form-row">
+        <label for="node-input-description"><i class="icon-tag"></i> Description</label>
+        <input type="text" id="node-input-description" placeholder="Name">
+    </div>
+    <div class="form-row">
+        <label for="node-input-name"><i class="icon-tag"></i> Name</label>
+        <input type="text" id="node-input-name" placeholder="Name">
+    </div>
+</script>
+
+<script type="text/x-red" data-help-name="siot-net in">
+    <p>A node that acts as a siot actor, which listens to a sensor configured in the siot center</p>
+</script>
+
+<script type="text/javascript">
+
+    RED.nodes.registerType('siot-net out',{
+        category: 'output',
+        color: '#C0DEED',
+        defaults: {
+            name: {value:"", required: true},
+            description: {value:""},
+            siotCenter: {value: "", type:"siot-center", required: true},
+            uuid: {value: generateGUID(), required: true},
+            valueType: {value: "", required: true}
+        },
+        onadd: function() {
+
+            // every time we add a new we set a new default uuid
+            var nodetype = RED.nodes.getType('siot-net out');
+
+            nodetype.defaults.uuid.value = generateGUID();
+            //console.log(new Date(), nodetype);
+        },
+        inputs:1,
+        outputs:0,
+        icon: "bridge.png",
+        label: function() {
+            return this.name||"siot sensor";
+        }
+    });
+</script>
+
+<script type="text/x-red" data-template-name="siot-net out">
+    <div class="form-row">
+        <label for="node-input-siotCenter"><i class="icon-tag"></i> siot Center</label>
+        <input type="text" id="node-input-siotCenter" placeholder="Name">
+    </div>
+    <div class="form-row">
+        <label for="node-input-valueType"><i class="icon-tag"></i> Value type</label>
+        <select id="node-input-valueType">
+
+            <optgroup label="Simple types">
+            <option value="int">Integer</option>
+            <option value="float">Float</option>
+            <option value="string">String</option>
+            <option value="boolean">Boolean</option>
+            <option value="binary">Binary</option>
+
+            <optgroup label="Complex types">
+            <option value="gps">GPS</option>
+            <option value="json">JSON</option>
+
+        </select>
+    </div>
+    <div class="form-row">
+        <label for="node-input-uuid"><i class="icon-tag"></i> UUID</label>
+        <input type="text" id="node-input-uuid" placeholder="Name">
+    </div>
+    <div class="form-row">
+        <label for="node-input-description"><i class="icon-tag"></i> Description</label>
+        <input type="text" id="node-input-description" placeholder="Name">
+    </div>
+    <div class="form-row">
+        <label for="node-input-name"><i class="icon-tag"></i> Name</label>
+        <input type="text" id="node-input-name" placeholder="Name">
+    </div>
+</script>
+
+<script type="text/x-red" data-help-name="siot-net out">
+    <p>A node that publishs messages as a sensor to a siot center</p>
+</script>
+
+
+<!-- ------------------------------- SIOT IO ----------------------------------
+<script type="text/javascript">
+    RED.nodes.registerType('siot-io in',{
+        category: 'input',
+        color: '#C0DEED',
+        defaults: {
+            name: {value:"" },
+            siotCenter: {value: "", type:"siot-center", required: true},
+            uuid: {value: "", required: true}
+        },
+        inputs:0,
+        outputs:1,
+        icon: "bridge.png",
+        label: function() {
+            return this.name||"listen to siot sensor";
+        }
+    });
+</script>
+
+<script type="text/x-red" data-template-name="siot-io in">
+
+    <div class="form-row">
+        <label for="node-input-siotCenter"><i class="icon-tag"></i> siot Center</label>
+        <input type="text" id="node-input-siotCenter" placeholder="Name">
+    </div>
+    <div class="form-row">
+        <label for="node-input-uuid"><i class="icon-tag"></i> Sensor</label>
+        <select id="node-input-uuid">
+
+            <optgroup label="Sensors">
+            <option value="int">Test 1</option>
+
+        </select>
+    </div>
+    <div class="form-row">
+        <label for="node-input-name"><i class="icon-tag"></i> Name</label>
+        <input type="text" id="node-input-name" placeholder="Name">
+    </div>
+</script>
+
+<script type="text/x-red" data-help-name="siot-io in">
+    <p>A node that listens to a sensor configured in the siot center</p>
+</script>
+
+<script type="text/javascript">
+
+    RED.nodes.registerType('siot-io out',{
+        category: 'output',
+        color: '#C0DEED',
+        defaults: {
+            name: {value:"" },
+            siotCenter: {value: "", type:"siot-center", required: true},
+            uuid: {value: "", required: true}
+        },
+        inputs:1,
+        outputs:0,
+        icon: "bridge.png",
+        label: function() {
+            return this.name||"post to siot actor";
+        }
+    });
+</script>
+
+<script type="text/x-red" data-template-name="siot-io out">
+    <div class="form-row">
+        <label for="node-input-siotCenter"><i class="icon-tag"></i> siot Center</label>
+        <input type="text" id="node-input-siotCenter" placeholder="Name">
+    </div>
+    <div class="form-row">
+        <label for="node-input-uuid"><i class="icon-tag"></i> Sensor</label>
+        <select id="node-input-uuid">
+
+            <optgroup label="Actors">
+            <option value="int">Test 1</option>
+
+        </select>
+    </div>
+    <div class="form-row">
+        <label for="node-input-name"><i class="icon-tag"></i> Name</label>
+        <input type="text" id="node-input-name" placeholder="Name">
+    </div>
+</script>
+
+<script type="text/x-red" data-help-name="siot-io out">
+    <p>A node that publishs messages as a actor to a siot center</p>
+</script>
+-->
