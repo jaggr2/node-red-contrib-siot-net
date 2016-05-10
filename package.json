@@ -22,7 +22,7 @@
   },
   "homepage": "https://github.com/jaggr2/node-red-contrib-siot-net#readme",
   "dependencies": {
-    "siot.net-nodejs-api": "^1.0.3"
+    "siot.net-nodejs-api": "^1.0.5"
   },
   "node-red": {
     "nodes": {

@@ -1,8 +1,8 @@
-# node-red-contrib-siotnet
+# node-red-contrib-siot-net
 A node-red node for connecting to the siot.net platform.
 
 To use this node you need a valid siot center license. If you haven't one, you
-can get one on www.siot.net.
+can get one at www.siot.net.
 
 After configuring the node with your siot center license, you will be able
 to publish values as a siot.net sensor and/or register as siot.net actor to get notifications/commands/etc.
@@ -11,7 +11,7 @@ to publish values as a siot.net sensor and/or register as siot.net actor to get 
 In your Node-RED directory, execute:
 
 ```sh
-npm install node-red-contrib-siotnet
+npm install node-red-contrib-siot-net
 ```
 
 ### Contributing
