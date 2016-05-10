@@ -1,13 +1,12 @@
-var siot = require('../../siot.net/index');
+var siot = require('siot.net-nodejs-api');
 
 module.exports = function(RED) {
     function SiotCenterNode(config) {
         RED.nodes.createNode(this,config);
         var node = this;
 
-        this.siotGateway = new siot.gateway({
-            centerLicense: config.licenseID //,
-            //mqttCenterURLs: ['mqtt://web:1234@formula.xrj.ch']
+        node.siotGateway = new siot.gateway({
+            centerLicense: config.licenseID
         });
     }
     RED.nodes.registerType("siot-center", SiotCenterNode);
@@ -29,13 +28,13 @@ module.exports = function(RED) {
 
         if(thisNode.siotCenterNode) {
 
-            thisNode.status({fill:"red",shape:"ring",text:"common.status.disconnected"});
+            thisNode.status({fill:"red",shape:"ring",text:"node-red:common.status.disconnected"});
 
             thisNode.siotCenterNode.siotGateway.on('connect', function(){
-                thisNode.status({fill:"green",shape:"dot",text:"common.status.connected"});
+                thisNode.status({fill:"green",shape:"dot",text:"node-red:common.status.connected"});
             });
             thisNode.siotCenterNode.siotGateway.on('close', function(){
-                thisNode.status({fill:"red",shape:"ring",text:"common.status.disconnected"});
+                thisNode.status({fill:"red",shape:"ring",text:"node-red:common.status.disconnected"});
             });
 
 
@@ -43,13 +42,13 @@ module.exports = function(RED) {
                 if(err) return thisNode.error('error on registerDevice');
 
                 thisNode.siotCenterNode.siotGateway.connect(function(err) {
-                    if(err) return thisNode.log(RED._("mqtt.state.connect-failed",{broker: err.toString()}));
+                    if(err) return thisNode.log(RED._("node-red:mqtt.state.connect-failed",{broker: err.toString()}));
 
-                    thisNode.log(RED._("mqtt.state.connected",{broker: thisNode.siotCenterNode.siotGateway.connectedURL}));
+                    thisNode.log(RED._("node-red:mqtt.state.connected",{broker: thisNode.siotCenterNode.siotGateway.connectedURL}));
                 });
             });
         } else {
-            thisNode.error(RED._("mqtt.errors.missing-config"));
+            thisNode.error(RED._("node-red:mqtt.errors.missing-config"));
         }
     }
     RED.nodes.registerType("siot-net in",SiotNetIn);
@@ -63,26 +62,26 @@ module.exports = function(RED) {
 
         if(thisNode.siotCenterNode) {
 
-            thisNode.status({fill:"red",shape:"ring",text:"common.status.disconnected"});
+            thisNode.status({fill:"red",shape:"ring",text:"node-red:common.status.disconnected"});
 
             thisNode.siotCenterNode.siotGateway.on('connect', function(){
-                thisNode.status({fill:"green",shape:"dot",text:"common.status.connected"});
+                thisNode.status({fill:"green",shape:"dot",text:"node-red:common.status.connected"});
             });
             thisNode.siotCenterNode.siotGateway.on('close', function(){
-                thisNode.status({fill:"red",shape:"ring",text:"common.status.disconnected"});
+                thisNode.status({fill:"red",shape:"ring",text:"node-red:common.status.disconnected"});
             });
 
             thisNode.siotCenterNode.siotGateway.registerDevice(thisNode.siotDevice, function(err) {
                 if(err) return thisNode.error('error on registerDevice');
 
                 thisNode.siotCenterNode.siotGateway.connect(function(err) {
-                    if(err) return thisNode.log(RED._("mqtt.state.connect-failed",{broker: err.toString()}));
+                    if(err) return thisNode.log(RED._("node-red:mqtt.state.connect-failed",{broker: err.toString()}));
 
-                    thisNode.log(RED._("mqtt.state.connected",{broker: thisNode.siotCenterNode.siotGateway.connectedURL}));
+                    thisNode.log(RED._("node-red:mqtt.state.connected",{broker: thisNode.siotCenterNode.siotGateway.connectedURL}));
                 });
             });
         } else {
-            thisNode.error(RED._("mqtt.errors.missing-config"));
+            thisNode.error(RED._("node-red:mqtt.errors.missing-config"));
         }
 
         this.on('input', function(msg) {
@@ -90,23 +89,4 @@ module.exports = function(RED) {
         });
     }
     RED.nodes.registerType("siot-net out",SiotNetOut);
-
-    /*
-    function SiotIoIn(config) {
-        RED.nodes.createNode(this,config);
-        var node = this;
-
-
-    }
-    RED.nodes.registerType("siot-io in",SiotIoIn);
-
-
-    function SiotIoOut(config) {
-        RED.nodes.createNode(this,config);
-        var node = this;
-
-
-    }
-    RED.nodes.registerType("siot-io out",SiotIoOut);
-    */
 };
